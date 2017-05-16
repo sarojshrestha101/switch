@@ -1,0 +1,75 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Basic HTML</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" >
+</head>
+<body>
+        <!--[if lt IE 8]>
+            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+            <![endif]-->
+
+            <!-- JUMBOTRON -->
+            <div class="jumbotron">
+              <div class="container">
+                  <h1>Raspberry PI Project</h1>
+                  <p>just making a small project.</p>                
+              </div>
+            </div>
+
+
+          <div class="container">
+              <!-- CONTAINER -->
+              <div class="row">
+                <div class="col-md-4">
+                    <h2>Switch</h2>
+                    <h4>State: {{ 'ON' if switch else 'OFF' }}</h4>
+                    
+                </div>
+
+                <div class="col-md-4">
+                  <h2>LED</h2>
+                  <p>
+                      <button class="btn btn-default" type="submit" id = "led_on">Led ON</button>
+                      <button class="btn btn-default" type="submit" id = "led_off">Led OFF</button>
+                  </p>
+                  
+              </div>
+
+              <div class="col-md-4">
+                  <h2>CPU Temperature</h2>
+                  <h3>{{ temp }}C</h3>
+                  
+              </div>
+          </div>
+
+          <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+          <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.12.0.min.js"><\/script>')</script>
+          <script type="text/javascript">
+          //button click handlers.
+            $(document).ready(function(){
+                $('#led_on').click(function(){            
+                    console.log('Led ON!!');            
+                    $.post('/led/1');
+                });
+
+                $('#led_off').click(function(){            
+                    console.log('Led off!!');            
+                    $.post('/led/0');
+                });
+            }); 
+
+            // switch server send point end point.
+            var switchsource = new EventSource("{{ url_for('switch') }}");
+
+            switchsource.onmessage = function(e) {
+                console.log(e.data);  
+              }
+
+        </script>
+    </body>
+    </html>
